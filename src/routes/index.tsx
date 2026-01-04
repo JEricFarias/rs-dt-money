@@ -1,11 +1,13 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { useCallback, useState } from "react";
+import { useState, useCallback } from "react";
+import { StatusBar } from "react-native";
 
 import { PublicRoutes } from "./PublicRoutes";
 import { PrivateRoutes } from "./PrivateRoutes";
 
+import { NavigationContainer } from "@react-navigation/native";
+
 export function NavigationRoutes() {
-  const [user, _] = useState({ name: "Eric" });
+  const [user, _] = useState(undefined);
 
   const Routes = useCallback(() => {
     if (!user) {
@@ -17,6 +19,7 @@ export function NavigationRoutes() {
 
   return (
     <NavigationContainer>
+      <StatusBar barStyle="light-content" />
       <Routes />
     </NavigationContainer>
   );
