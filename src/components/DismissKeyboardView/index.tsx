@@ -13,9 +13,11 @@ type Props = {
 export function DismissKeyboardView({ children }: Props) {
   return (
     <SafeAreaView className="flex-1 bg-background-primary">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} className="flex-1">
         <KeyboardAvoidingView behavior="padding" className="flex-1">
-          <ScrollView>{children}</ScrollView>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            {children}
+          </ScrollView>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>
     </SafeAreaView>

@@ -1,19 +1,16 @@
-import { useNavigation } from "@react-navigation/native";
-import { Text, TextInput, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 
-import type { Navigation } from "@/routes/PublicRoutes";
 import { DismissKeyboardView } from "@/components/DismissKeyboardView";
+import { LoginForm } from "./LoginForm";
+import { HiddableHeader } from "@/components/HiddableHeader";
 
 export function Login() {
-  const navigation = useNavigation<Navigation>();
-
   return (
     <DismissKeyboardView>
-      <Text>Tela de login</Text>
-      <TextInput className="bg-gray-500 w-full" />
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-        <Text>Registrar</Text>
-      </TouchableOpacity>
+      <View className="flex-1 w-[82%] self-center">
+        <HiddableHeader />
+        <LoginForm />
+      </View>
     </DismissKeyboardView>
   );
 }
