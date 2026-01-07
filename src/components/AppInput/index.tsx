@@ -6,7 +6,6 @@ import {
   View,
   type TextInputProps,
 } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 import {
   Controller,
   type Control,
@@ -14,8 +13,10 @@ import {
   type Path,
 } from "react-hook-form";
 import clsx from "clsx";
+import { MaterialIcons } from "@expo/vector-icons";
 
 import { colors } from "@/shared/colors";
+import { ErrorMessage } from "../ErrorMessage";
 
 interface AppInputsParams<T extends FieldValues> extends TextInputProps {
   control: Control<T>;
@@ -46,7 +47,7 @@ export function AppInput<T extends FieldValues>({
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange, value } }) => (
+      render={({ field: { onChange, value }, fieldState: { error } }) => (
         <View className="w-full mt-4">
           {label && (
             <Text
@@ -63,7 +64,13 @@ export function AppInput<T extends FieldValues>({
             {leftIconName && (
               <MaterialIcons
                 name={leftIconName}
-                color={isFocused ? colors["accent-brand"] : colors.gray[600]}
+                color={
+                  error
+                    ? colors["accent-red-background-primary"]
+                    : isFocused
+                      ? colors["accent-brand"]
+                      : colors.gray[600]
+                }
                 size={24}
                 className="mr-2"
               />
@@ -71,7 +78,7 @@ export function AppInput<T extends FieldValues>({
             <TextInput
               ref={inputRef}
               value={value}
-              onChange={onChange}
+              onChangeText={onChange}
               placeholderTextColor={colors.gray[700]}
               className="flex-1 text-base text-gray-500"
               onFocus={checkFocus}
@@ -90,6 +97,8 @@ export function AppInput<T extends FieldValues>({
               </TouchableOpacity>
             )}
           </TouchableOpacity>
+
+          {error && <ErrorMessage>{error.message}</ErrorMessage>}
         </View>
       )}
     />

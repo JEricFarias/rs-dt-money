@@ -1,14 +1,18 @@
 import { Text, View } from "react-native";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import type { Navigation } from "@/routes/PublicRoutes";
 
 import { AppButton } from "@/components/AppButton";
 import { AppInput } from "@/components/AppInput";
-import type { Navigation } from "@/routes/PublicRoutes";
+
+import { schema } from "./schema";
 
 export interface FormLoginParams {
   email: string;
-  passaword: string;
+  password: string;
 }
 
 export function LoginForm() {
@@ -16,9 +20,18 @@ export function LoginForm() {
     control,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<FormLoginParams>();
-
+  } = useForm<FormLoginParams>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: yupResolver(schema),
+  });
   const navigation = useNavigation<Navigation>();
+
+  async function onSubmit(userData: FormLoginParams) {
+    console.log("🚀 ~ onSubmit ~ userData:", userData);
+  }
 
   return (
     <>
@@ -26,13 +39,14 @@ export function LoginForm() {
         control={control}
         name="email"
         label="EMAIL"
-        placeholder="mail@exemplo.com"
+        placeholder="mail@example.com"
         leftIconName="mail-outline"
+        textContentType="emailAddress"
       />
 
       <AppInput
         control={control}
-        name="passaword"
+        name="password"
         label="SENHA"
         placeholder="Sua senha"
         leftIconName="lock-outline"
@@ -40,7 +54,11 @@ export function LoginForm() {
       />
 
       <View className="flex-1 justify-between mt-8 mb-6">
-        <AppButton iconName="arrow-forward" mode="fill">
+        <AppButton
+          iconName="arrow-forward"
+          mode="fill"
+          onPress={handleSubmit(onSubmit)}
+        >
           Login
         </AppButton>
 
