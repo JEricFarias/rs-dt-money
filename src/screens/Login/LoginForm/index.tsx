@@ -1,16 +1,18 @@
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { useForm } from "react-hook-form";
 import { useNavigation } from "@react-navigation/native";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { AxiosError } from "axios";
 
 import type { Navigation } from "@/routes/PublicRoutes";
 
 import { AppButton } from "@/components/AppButton";
 import { AppInput } from "@/components/AppInput";
+import { useErrorHandler } from "@/shared/hooks/useErrorHandler";
+import { colors } from "@/shared/colors";
+
+import { useAuthContext } from "@/context/auth.context";
 
 import { schema } from "./schema";
-import { useAuthContext } from "@/context/auth.context";
 
 export interface FormLoginParams {
   email: string;
@@ -31,15 +33,15 @@ export function LoginForm() {
   });
 
   const { handleAuthenticate } = useAuthContext();
+  const { handlerError } = useErrorHandler();
+
   const navigation = useNavigation<Navigation>();
 
   async function onSubmit(userData: FormLoginParams) {
     try {
       await handleAuthenticate(userData);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error.response?.data);
-      }
+      handlerError(error, "Falha ao logar");
     }
   }
 
@@ -68,8 +70,9 @@ export function LoginForm() {
           iconName="arrow-forward"
           mode="fill"
           onPress={handleSubmit(onSubmit)}
+          disabled={isSubmitting}
         >
-          Login
+          {isSubmitting ? <ActivityIndicator color={colors.white} /> : "Login"}
         </AppButton>
 
         <View className="">
